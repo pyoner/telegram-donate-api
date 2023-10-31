@@ -80,7 +80,7 @@ model Subscription extends Chrono {
     amount Int
     currency String
     period String
-    invite_link String
+    invite_link String @unique
 
     // rel
     channel_id Int
