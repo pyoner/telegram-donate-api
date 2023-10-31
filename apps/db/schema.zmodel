@@ -13,37 +13,96 @@ generator client {
 }
 
 /**
+ * Chrono model
+ */
+abstract model Chrono {
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    @@index([created_at], sort: 'desc')
+    @@index([updated_at], sort: 'desc')
+}
+
+
+/**
  * User model
  */
-model User {
-    id String @id @default(cuid())
-    email String @unique @email
-    password String @password @omit @length(8, 16)
-    posts Post[]
+model User extends Chrono {
+    id Int @id
+    is_bot Boolean
+    first_name String
+    last_name String?
+    username String?
+    language_code String?
+    is_premium Boolean?
+    added_to_attachment_menu Boolean?
+    can_join_groups Boolean?
+    can_read_all_group_messages Boolean?
+    supports_inline_queries Boolean?
 
-    // everybody can signup
-    @@allow('create', true)
+    // rel
+    channels Channel[]
+    subscribers Subscriber[]
 
-    // full access by self
-    @@allow('all', auth() == this)
+    @@map('users')
 }
 
 /**
- * Post model
+ * Channel model
  */
-model Post {
-    id String @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    title String @length(1, 256)
-    content String
-    published Boolean @default(false)
-    author User @relation(fields: [authorId], references: [id])
-    authorId String
+model Channel extends Chrono {
+    id Int @id
+    title String?         // Optional title for channels
+    username String?         // Optional username for channels
+    description String?         // Optional description for channels
+    invite_link String?         // Optional primary invite link for channels
+    linked_chat_id Int?            // Optional unique identifier for the linked chat/discussion group
 
-    // allow read for all signin users
-    @@allow('read', auth() != null && published)
+    // rel
+    owner_id Int
+    owner User @relation(fields: [owner_id], references: [id])
 
-    // full access by author
-    @@allow('all', author == auth())
+    subscriptions Subscription[]
+
+
+    @@map('channels')
+}
+
+/**
+ * Subscription model
+ **/
+model Subscription extends Chrono {
+    id Int @id @default(autoincrement())
+    title String
+    description String
+    command String?
+    cover_url String?
+    amount Int
+    currency String
+    period String
+    invite_link String
+
+    // rel
+    channel_id Int
+    channel Channel @relation(fields: [channel_id], references: [id])
+
+    subscribers Subscriber[]
+
+    @@map('subscriptions')
+}
+
+/**
+ * Subscriber model
+ */
+model Subscriber extends Chrono {
+    id Int @id @default(autoincrement())
+    
+    // rel
+    user_id Int
+    user User @relation(fields: [user_id], references: [id])
+
+    subscription_id Int
+    subscription Subscription @relation(fields: [subscription_id], references: [id])
+
+    @@map('subscribers')
 }
