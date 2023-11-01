@@ -89,7 +89,7 @@ model Subscription extends Chrono, SoftDelete {
     amount Int
     currency String
     period String
-    invite_link String @unique
+    invite_link String
 
     // rel
     channel_id Int
@@ -98,6 +98,7 @@ model Subscription extends Chrono, SoftDelete {
     subscribers Subscriber[]
 
     @@map('subscriptions')
+    @@unique([invite_link, deleted_at])
 }
 
 /**
