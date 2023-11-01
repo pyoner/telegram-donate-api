@@ -69,7 +69,7 @@ model Channel extends Chrono {
     linked_chat_id Int?            // Optional unique identifier for the linked chat/discussion group
 
     // rel
-    owner_id Int
+    owner_id BigInt
     owner User @relation(fields: [owner_id], references: [id])
 
     subscriptions Subscription[]
@@ -93,7 +93,7 @@ model Subscription extends Chrono, SoftDelete {
     invite_link String
 
     // rel
-    channel_id Int
+    channel_id BigInt
     channel Channel @relation(fields: [channel_id], references: [id])
 
     subscribers Subscriber[]
@@ -109,7 +109,7 @@ model Subscriber extends Chrono, SoftDelete {
     id Int @id @default(autoincrement())
     
     // rel
-    user_id Int
+    user_id BigInt
     user User @relation(fields: [user_id], references: [id])
 
     subscription_id Int
