@@ -80,7 +80,7 @@ model Channel extends Chrono {
 /**
  * Subscription model
  **/
-model Subscription extends Chrono {
+model Subscription extends Chrono, SoftDelete {
     id Int @id @default(autoincrement())
     title String
     description String
@@ -103,7 +103,7 @@ model Subscription extends Chrono {
 /**
  * Subscriber model
  */
-model Subscriber extends Chrono {
+model Subscriber extends Chrono, SoftDelete {
     id Int @id @default(autoincrement())
     
     // rel
@@ -114,5 +114,5 @@ model Subscriber extends Chrono {
     subscription Subscription @relation(fields: [subscription_id], references: [id])
 
     @@map('subscribers')
-    @@unique([user_id, subscription_id])
+    @@unique([user_id, subscription_id, deleted_at])
 }
