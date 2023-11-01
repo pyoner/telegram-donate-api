@@ -52,6 +52,7 @@ model User extends Chrono {
     // rel
     channels Channel[]
     subscribers Subscriber[]
+    tokens Token[]
 
     @@map('users')
 }
@@ -116,4 +117,20 @@ model Subscriber extends Chrono, SoftDelete {
 
     @@map('subscribers')
     @@unique([user_id, subscription_id, deleted_at])
+}
+
+/**
+ * Token model
+ */
+model Token extends Chrono {
+    id Int @id @default(autoincrement())
+    value String @default(cuid())
+    name String?
+
+    // rel
+    owner_id BigInt
+    owner User @relation(fields: [owner_id], references: [id])
+
+    @@map('tokens')
+    @@unique([owner_id, name])
 }
