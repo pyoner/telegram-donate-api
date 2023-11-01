@@ -37,7 +37,7 @@ abstract model SoftDelete {
  * User model
  */
 model User extends Chrono {
-    id Int @id
+    id BigInt @id
     is_bot Boolean
     first_name String
     last_name String?
@@ -60,7 +60,7 @@ model User extends Chrono {
  * Channel model
  */
 model Channel extends Chrono {
-    id Int @id
+    id BigInt @id
     title String?         // Optional title for channels
     username String?         // Optional username for channels
     description String?         // Optional description for channels
