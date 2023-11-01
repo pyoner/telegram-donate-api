@@ -23,6 +23,15 @@ abstract model Chrono {
     @@index([updated_at], sort: 'desc')
 }
 
+/**
+ * SoftDelete
+ */
+abstract model SoftDelete {
+    deleted_at DateTime?
+
+    @@index([deleted_at(sort: Desc)])
+}
+
 
 /**
  * User model
